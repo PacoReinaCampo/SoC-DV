@@ -4,3 +4,6 @@
 [submodule "soc-msp430"]
 	path = soc-msp430
 	url = https://github.com/PacoReinaCampo/SoC-MSP430.git
+[submodule "soc-riscv"]
+	path = soc-riscv
+	url = https://github.com/PacoReinaCampo/SoC-RISCV.git
