@@ -41,42 +41,42 @@
 
 interface riscv_interface;
 
-  wire clk;
-  wire rst;
-  wire rst_cpu;
-  wire rst_sys;
+  logic clk;
+  logic rst;
+  logic rst_cpu;
+  logic rst_sys;
 
   dii_flit [1:0] debug_ring_in;
   dii_flit [1:0] debug_ring_out;
 
-  wire [1:0] debug_ring_in_ready;
-  wire [1:0] debug_ring_out_ready;
+  logic [1:0] debug_ring_in_ready;
+  logic [1:0] debug_ring_out_ready;
 
-  wire            ahb3_ext_hsel_i;
-  wire [PLEN-1:0] ahb3_ext_haddr_i;
-  wire [XLEN-1:0] ahb3_ext_hwdata_i;
-  wire            ahb3_ext_hwrite_i;
-  wire [     2:0] ahb3_ext_hsize_i;
-  wire [     2:0] ahb3_ext_hburst_i;
-  wire [     3:0] ahb3_ext_hprot_i;
-  wire [     1:0] ahb3_ext_htrans_i;
-  wire            ahb3_ext_hmastlock_i;
+  logic            ahb3_ext_hsel_i;
+  logic [PLEN-1:0] ahb3_ext_haddr_i;
+  logic [XLEN-1:0] ahb3_ext_hwdata_i;
+  logic            ahb3_ext_hwrite_i;
+  logic [     2:0] ahb3_ext_hsize_i;
+  logic [     2:0] ahb3_ext_hburst_i;
+  logic [     3:0] ahb3_ext_hprot_i;
+  logic [     1:0] ahb3_ext_htrans_i;
+  logic            ahb3_ext_hmastlock_i;
 
-  wire [XLEN-1:0] ahb3_ext_hrdata_o;
-  wire            ahb3_ext_hready_o;
-  wire            ahb3_ext_hresp_o;
+  logic [XLEN-1:0] ahb3_ext_hrdata_o;
+  logic            ahb3_ext_hready_o;
+  logic            ahb3_ext_hresp_o;
 
   // Flits from NoC->tiles
-  wire [CHANNELS-1:0][FLIT_WIDTH-1:0] link_in_flit;
-  wire [CHANNELS-1:0]                 link_in_last;
-  wire [CHANNELS-1:0]                 link_in_valid;
-  wire [CHANNELS-1:0]                 link_in_ready;
+  logic [CHANNELS-1:0][FLIT_WIDTH-1:0] link_in_flit;
+  logic [CHANNELS-1:0]                 link_in_last;
+  logic [CHANNELS-1:0]                 link_in_valid;
+  logic [CHANNELS-1:0]                 link_in_ready;
 
   // Flits from tiles->NoC
-  wire [CHANNELS-1:0][FLIT_WIDTH-1:0] link_out_flit;
-  wire [CHANNELS-1:0]                 link_out_last;
-  wire [CHANNELS-1:0]                 link_out_valid;
-  wire [CHANNELS-1:0]                 link_out_ready;
+  logic [CHANNELS-1:0][FLIT_WIDTH-1:0] link_out_flit;
+  logic [CHANNELS-1:0]                 link_out_last;
+  logic [CHANNELS-1:0]                 link_out_valid;
+  logic [CHANNELS-1:0]                 link_out_ready;
   
   clocking master_cb @(posedge clk);
     output clk;

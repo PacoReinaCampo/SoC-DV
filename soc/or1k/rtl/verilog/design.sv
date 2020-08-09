@@ -39,406 +39,163 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+interface or1k_interface;
 
-interface or1k_interface #(
-  parameter OPTION_OPERAND_WIDTH = 32,
+  logic clk;
+  logic rst;
+  logic rst_cpu;
+  logic rst_sys;
 
-  parameter OPTION_CPU0 = "CAPPUCCINO",
+  dii_flit [1:0] debug_ring_in;
+  dii_flit [1:0] debug_ring_out;
 
-  parameter FEATURE_DATACACHE          = "NONE",
-  parameter OPTION_DCACHE_BLOCK_WIDTH  = 5,
-  parameter OPTION_DCACHE_SET_WIDTH    = 9,
-  parameter OPTION_DCACHE_WAYS         = 2,
-  parameter OPTION_DCACHE_LIMIT_WIDTH  = 32,
-  parameter OPTION_DCACHE_SNOOP        = "NONE",
-  parameter FEATURE_DMMU               = "NONE",
-  parameter FEATURE_DMMU_HW_TLB_RELOAD = "NONE",
-  parameter OPTION_DMMU_SET_WIDTH      = 6,
-  parameter OPTION_DMMU_WAYS           = 1,
-  parameter FEATURE_INSTRUCTIONCACHE   = "NONE",
-  parameter OPTION_ICACHE_BLOCK_WIDTH  = 5,
-  parameter OPTION_ICACHE_SET_WIDTH    = 9,
-  parameter OPTION_ICACHE_WAYS         = 2,
-  parameter OPTION_ICACHE_LIMIT_WIDTH  = 32,
-  parameter FEATURE_IMMU               = "NONE",
-  parameter FEATURE_IMMU_HW_TLB_RELOAD = "NONE",
-  parameter OPTION_IMMU_SET_WIDTH      = 6,
-  parameter OPTION_IMMU_WAYS           = 1,
-  parameter FEATURE_TIMER              = "ENABLED",
-  parameter FEATURE_DEBUGUNIT          = "NONE",
-  parameter FEATURE_PERFCOUNTERS       = "NONE",
-  parameter OPTION_PERFCOUNTERS_NUM    = 0,
-  parameter FEATURE_MAC                = "NONE",
+  logic [1:0] debug_ring_in_ready;
+  logic [1:0] debug_ring_out_ready;
 
-  parameter FEATURE_SYSCALL = "ENABLED",
-  parameter FEATURE_TRAP    = "ENABLED",
-  parameter FEATURE_RANGE   = "ENABLED",
+  logic [AW-1:0] wb_ext_adr_i;
+  logic          wb_ext_cyc_i;
+  logic [DW-1:0] wb_ext_dat_i;
+  logic [   3:0] wb_ext_sel_i;
+  logic          wb_ext_stb_i;
+  logic          wb_ext_we_i;
+  logic          wb_ext_cab_i;
+  logic [   2:0] wb_ext_cti_i;
+  logic [   1:0] wb_ext_bte_i;
+  logic          wb_ext_ack_o;
+  logic          wb_ext_rty_o;
+  logic          wb_ext_err_o;
+  logic [DW-1:0] wb_ext_dat_o;
 
-  parameter FEATURE_PIC          = "ENABLED",
-  parameter OPTION_PIC_TRIGGER   = "LEVEL",
-  parameter OPTION_PIC_NMI_WIDTH = 0,
+  // Flits from NoC->tiles
+  logic [CHANNELS-1:0][FLIT_WIDTH-1:0] link_in_flit;
+  logic [CHANNELS-1:0]                 link_in_last;
+  logic [CHANNELS-1:0]                 link_in_valid;
+  logic [CHANNELS-1:0]                 link_in_ready;
 
-  parameter FEATURE_DSX        = "NONE",
-  parameter FEATURE_OVERFLOW   = "NONE",
-  parameter FEATURE_CARRY_FLAG = "ENABLED",
-
-  parameter FEATURE_FASTCONTEXTS     = "NONE",
-  parameter OPTION_RF_CLEAR_ON_INIT  = 0,
-  parameter OPTION_RF_NUM_SHADOW_GPR = 0,
-  parameter OPTION_RF_ADDR_WIDTH     = 5,
-  parameter OPTION_RF_WORDS          = 32,
-
-  parameter OPTION_RESET_PC = {{(OPTION_OPERAND_WIDTH-13){1'b0}}, `OR1K_RESET_VECTOR, 8'd0},
-
-  parameter OPTION_TCM_FETCHER = "DISABLED",
-
-  parameter FEATURE_MULTIPLIER = "THREESTAGE",
-  parameter FEATURE_DIVIDER    = "NONE",
-
-  parameter OPTION_SHIFTER = "BARREL",
-
-  parameter FEATURE_ADDC   = "NONE",
-  parameter FEATURE_SRA    = "ENABLED",
-  parameter FEATURE_ROR    = "NONE",
-  parameter FEATURE_EXT    = "NONE",
-  parameter FEATURE_CMOV   = "NONE",
-  parameter FEATURE_FFL1   = "NONE",
-  parameter FEATURE_MSYNC  = "ENABLED",
-  parameter FEATURE_PSYNC  = "NONE",
-  parameter FEATURE_CSYNC  = "NONE",
-  parameter FEATURE_ATOMIC = "ENABLED",
-
-  parameter FEATURE_FPU          = "NONE", // ENABLED|NONE
-  parameter OPTION_FTOI_ROUNDING = "CPP", // "CPP" / "IEEE"
-
-  parameter FEATURE_CUST1 = "NONE",
-  parameter FEATURE_CUST2 = "NONE",
-  parameter FEATURE_CUST3 = "NONE",
-  parameter FEATURE_CUST4 = "NONE",
-  parameter FEATURE_CUST5 = "NONE",
-  parameter FEATURE_CUST6 = "NONE",
-  parameter FEATURE_CUST7 = "NONE",
-  parameter FEATURE_CUST8 = "NONE",
-
-  parameter FEATURE_STORE_BUFFER            = "ENABLED",
-  parameter OPTION_STORE_BUFFER_DEPTH_WIDTH = 8,
-
-  parameter FEATURE_MULTICORE = "NONE",
-
-  parameter FEATURE_TRACEPORT_EXEC   = "NONE",
-  parameter FEATURE_BRANCH_PREDICTOR = "SIMPLE"
-)
-  ();
-
-  logic                            clk;
-  logic                            rst;
-
-  // Instruction bus
-  logic                            ibus_err_i;
-  logic                            ibus_ack_i;
-  logic [`OR1K_INSN_WIDTH    -1:0] ibus_dat_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] ibus_adr_o;
-  logic                            ibus_req_o;
-  logic                            ibus_burst_o;
-
-  // Data bus
-  logic                            dbus_err_i;
-  logic                            dbus_ack_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] dbus_dat_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] dbus_adr_o;
-  logic [OPTION_OPERAND_WIDTH-1:0] dbus_dat_o;
-  logic                            dbus_req_o;
-  logic [                     3:0] dbus_bsel_o;
-  logic                            dbus_we_o;
-  logic                            dbus_burst_o;
-
-  // Interrupts
-  logic [                     31:0] irq_i;
-
-  // Debug interface
-  logic [                    15:0] du_addr_i;
-  logic                            du_stb_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] du_dat_i;
-  logic                            du_we_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] du_dat_o;
-  logic                            du_ack_o;
-
-  // Stall control from debug interface
-  logic                            du_stall_i;
-  logic                            du_stall_o;
-
-  logic                            traceport_exec_valid_o;
-  logic [                    31:0] traceport_exec_pc_o;
-  logic                            traceport_exec_jb_o;
-  logic                            traceport_exec_jal_o;
-  logic                            traceport_exec_jr_o;
-  logic [                    31:0] traceport_exec_jbtarget_o;
-  logic [`OR1K_INSN_WIDTH    -1:0] traceport_exec_insn_o;
-  logic [OPTION_OPERAND_WIDTH-1:0] traceport_exec_wbdata_o;
-  logic [OPTION_RF_ADDR_WIDTH-1:0] traceport_exec_wbreg_o;
-  logic                            traceport_exec_wben_o;
-
-  // SPR accesses to external units (cache; mmu; etc.)
-  logic [                    15:0] spr_bus_addr_o;
-  logic                            spr_bus_we_o;
-  logic                            spr_bus_stb_o;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_o;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_dmmu_i;
-  logic                            spr_bus_ack_dmmu_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_immu_i;
-  logic                            spr_bus_ack_immu_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_mac_i;
-  logic                            spr_bus_ack_mac_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_pmu_i;
-  logic                            spr_bus_ack_pmu_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_pcu_i;
-  logic                            spr_bus_ack_pcu_i;
-  logic [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_fpu_i;
-  logic                            spr_bus_ack_fpu_i;
-  logic [                    15:0] spr_sr_o;
-
-  // The multicore core identifier
-  logic[OPTION_OPERAND_WIDTH-1:0] multicore_coreid_i;
-
-  // The number of cores
-  logic[OPTION_OPERAND_WIDTH-1:0] multicore_numcores_i;
-
-  logic[31:0] snoop_adr_i;
-  logic       snoop_en_i;
+  // Flits from tiles->NoC
+  logic [CHANNELS-1:0][FLIT_WIDTH-1:0] link_out_flit;
+  logic [CHANNELS-1:0]                 link_out_last;
+  logic [CHANNELS-1:0]                 link_out_valid;
+  logic [CHANNELS-1:0]                 link_out_ready;
   
   clocking master_cb @(posedge clk);
     output clk;
     output rst;
+    output rst_cpu;
+    output rst_sys;
 
-    // Instruction bus
-    output ibus_err_i;
-    output ibus_ack_i;
-    output ibus_dat_i;
-    input  ibus_adr_o;
-    input  ibus_req_o;
-    input  ibus_burst_o;
+    output debug_ring_in;
+    input  debug_ring_out;
 
-    // Data bus
-    output dbus_err_i;
-    output dbus_ack_i;
-    output dbus_dat_i;
-    input  dbus_adr_o;
-    input  dbus_dat_o;
-    input  dbus_req_o;
-    input  dbus_bsel_o;
-    input  dbus_we_o;
-    input  dbus_burst_o;
+    input  debug_ring_in_ready;
+    output debug_ring_out_ready;
 
-    // Interrupts
-    output irq_i;
+    input  wb_ext_adr_i;
+    input  wb_ext_cyc_i;
+    input  wb_ext_dat_i;
+    input  wb_ext_sel_i;
+    input  wb_ext_stb_i;
+    input  wb_ext_we_i;
+    input  wb_ext_cab_i;
+    input  wb_ext_cti_i;
+    input  wb_ext_bte_i;
 
-    // Debug interface
-    output du_addr_i;
-    output du_stb_i;
-    output du_dat_i;
-    output du_we_i;
-    input  du_dat_o;
-    input  du_ack_o;
+    output wb_ext_ack_o;
+    output wb_ext_rty_o;
+    output wb_ext_err_o;
+    output wb_ext_dat_o;
 
-    // Stall control from debug interface
-    output du_stall_i;
-    input  du_stall_o;
+    // Flits from NoC->tiles
+    output link_in_flit;
+    output link_in_last;
+    output link_in_valid;
+    input  link_in_ready;
 
-    input  traceport_exec_valid_o;
-    input  traceport_exec_pc_o;
-    input  traceport_exec_jb_o;
-    input  traceport_exec_jal_o;
-    input  traceport_exec_jr_o;
-    input  traceport_exec_jbtarget_o;
-    input  traceport_exec_insn_o;
-    input  traceport_exec_wbdata_o;
-    input  traceport_exec_wbreg_o;
-    input  traceport_exec_wben_o;
-
-    // SPR accesses to external units (cache; mmu; etc.)
-    input  spr_bus_addr_o;
-    input  spr_bus_we_o;
-    input  spr_bus_stb_o;
-    input  spr_bus_dat_o;
-    output spr_bus_dat_dmmu_i;
-    output spr_bus_ack_dmmu_i;
-    output spr_bus_dat_immu_i;
-    output spr_bus_ack_immu_i;
-    output spr_bus_dat_mac_i;
-    output spr_bus_ack_mac_i;
-    output spr_bus_dat_pmu_i;
-    output spr_bus_ack_pmu_i;
-    output spr_bus_dat_pcu_i;
-    output spr_bus_ack_pcu_i;
-    output spr_bus_dat_fpu_i;
-    output spr_bus_ack_fpu_i;
-    input  spr_sr_o;
-
-    // The multicore core identifier
-    output multicore_coreid_i;
-
-    // The number of cores
-    output multicore_numcores_i;
-
-    output snoop_adr_i;
-    output snoop_en_i;
+    // Flits from tiles->NoC
+    input  link_out_flit;
+    input  link_out_last;
+    input  link_out_valid;
+    output link_out_ready;
   endclocking : master_cb
 
   clocking slave_cb @(posedge clk);
     input  clk;
     input  rst;
+    input  rst_cpu;
+    input  rst_sys;
 
-    // Instruction bus
-    input  ibus_err_i;
-    input  ibus_ack_i;
-    input  ibus_dat_i;
-    output ibus_adr_o;
-    output ibus_req_o;
-    output ibus_burst_o;
+    input  debug_ring_in;
+    output debug_ring_out;
 
-    // Data bus
-    input  dbus_err_i;
-    input  dbus_ack_i;
-    input  dbus_dat_i;
-    output dbus_adr_o;
-    output dbus_dat_o;
-    output dbus_req_o;
-    output dbus_bsel_o;
-    output dbus_we_o;
-    output dbus_burst_o;
+    output debug_ring_in_ready;
+    input  debug_ring_out_ready;
 
-    // Interrupts
-    input  irq_i;
+    output wb_ext_adr_i;
+    output wb_ext_cyc_i;
+    output wb_ext_dat_i;
+    output wb_ext_sel_i;
+    output wb_ext_stb_i;
+    output wb_ext_we_i;
+    output wb_ext_cab_i;
+    output wb_ext_cti_i;
+    output wb_ext_bte_i;
 
-    // Debug interface
-    input  du_addr_i;
-    input  du_stb_i;
-    input  du_dat_i;
-    input  du_we_i;
-    output du_dat_o;
-    output du_ack_o;
+    input  wb_ext_ack_o;
+    input  wb_ext_rty_o;
+    input  wb_ext_err_o;
+    input  wb_ext_dat_o;
 
-    // Stall control from debug interface
-    input  du_stall_i;
-    output du_stall_o;
+    // Flits from NoC->tiles
+    input  link_in_flit;
+    input  link_in_last;
+    input  link_in_valid;
+    output link_in_ready;
 
-    output traceport_exec_valid_o;
-    output traceport_exec_pc_o;
-    output traceport_exec_jb_o;
-    output traceport_exec_jal_o;
-    output traceport_exec_jr_o;
-    output traceport_exec_jbtarget_o;
-    output traceport_exec_insn_o;
-    output traceport_exec_wbdata_o;
-    output traceport_exec_wbreg_o;
-    output traceport_exec_wben_o;
-
-    // SPR accesses to external units (cache; mmu; etc.)
-    output spr_bus_addr_o;
-    output spr_bus_we_o;
-    output spr_bus_stb_o;
-    output spr_bus_dat_o;
-    input  spr_bus_dat_dmmu_i;
-    input  spr_bus_ack_dmmu_i;
-    input  spr_bus_dat_immu_i;
-    input  spr_bus_ack_immu_i;
-    input  spr_bus_dat_mac_i;
-    input  spr_bus_ack_mac_i;
-    input  spr_bus_dat_pmu_i;
-    input  spr_bus_ack_pmu_i;
-    input  spr_bus_dat_pcu_i;
-    input  spr_bus_ack_pcu_i;
-    input  spr_bus_dat_fpu_i;
-    input  spr_bus_ack_fpu_i;
-    output spr_sr_o;
-
-    // The multicore core identifier
-    input  multicore_coreid_i;
-
-    // The number of cores
-    input  multicore_numcores_i;
-
-    input  snoop_adr_i;
-    input  snoop_en_i;
+    // Flits from tiles->NoC
+    output link_out_flit;
+    output link_out_last;
+    output link_out_valid;
+    input  link_out_ready;
   endclocking : slave_cb
   
   clocking monitor_cb @(posedge clk);
     input clk;
     input rst;
+    input rst_cpu;
+    input rst_sys;
 
-    // Instruction bus
-    input ibus_err_i;
-    input ibus_ack_i;
-    input ibus_dat_i;
-    input ibus_adr_o;
-    input ibus_req_o;
-    input ibus_burst_o;
+    input debug_ring_in;
+    input debug_ring_out;
 
-    // Data bus
-    input dbus_err_i;
-    input dbus_ack_i;
-    input dbus_dat_i;
-    input dbus_adr_o;
-    input dbus_dat_o;
-    input dbus_req_o;
-    input dbus_bsel_o;
-    input dbus_we_o;
-    input dbus_burst_o;
+    input debug_ring_in_ready;
+    input debug_ring_out_ready;
 
-    // Interrupts
-    input irq_i;
+    input wb_ext_adr_i;
+    input wb_ext_cyc_i;
+    input wb_ext_dat_i;
+    input wb_ext_sel_i;
+    input wb_ext_stb_i;
+    input wb_ext_we_i;
+    input wb_ext_cab_i;
+    input wb_ext_cti_i;
+    input wb_ext_bte_i;
 
-    // Debug interface
-    input du_addr_i;
-    input du_stb_i;
-    input du_dat_i;
-    input du_we_i;
-    input du_dat_o;
-    input du_ack_o;
+    input wb_ext_ack_o;
+    input wb_ext_rty_o;
+    input wb_ext_err_o;
+    input wb_ext_dat_o;
 
-    // Stall control from debug interface
-    input du_stall_i;
-    input du_stall_o;
+    // Flits from NoC->tiles
+    input link_in_flit;
+    input link_in_last;
+    input link_in_valid;
+    input link_in_ready;
 
-    input traceport_exec_valid_o;
-    input traceport_exec_pc_o;
-    input traceport_exec_jb_o;
-    input traceport_exec_jal_o;
-    input traceport_exec_jr_o;
-    input traceport_exec_jbtarget_o;
-    input traceport_exec_insn_o;
-    input traceport_exec_wbdata_o;
-    input traceport_exec_wbreg_o;
-    input traceport_exec_wben_o;
-
-    // SPR accesses to external units (cache; mmu; etc.)
-    input spr_bus_addr_o;
-    input spr_bus_we_o;
-    input spr_bus_stb_o;
-    input spr_bus_dat_o;
-    input spr_bus_dat_dmmu_i;
-    input spr_bus_ack_dmmu_i;
-    input spr_bus_dat_immu_i;
-    input spr_bus_ack_immu_i;
-    input spr_bus_dat_mac_i;
-    input spr_bus_ack_mac_i;
-    input spr_bus_dat_pmu_i;
-    input spr_bus_ack_pmu_i;
-    input spr_bus_dat_pcu_i;
-    input spr_bus_ack_pcu_i;
-    input spr_bus_dat_fpu_i;
-    input spr_bus_ack_fpu_i;
-    input spr_sr_o;
-
-    // The multicore core identifier
-    input multicore_coreid_i;
-
-    // The number of cores
-    input multicore_numcores_i;
-
-    input snoop_adr_i;
-    input snoop_en_i;
+    // Flits from tiles->NoC
+    input link_out_flit;
+    input link_out_last;
+    input link_out_valid;
+    input link_out_ready;
   endclocking : monitor_cb
 
   modport master(clocking master_cb);

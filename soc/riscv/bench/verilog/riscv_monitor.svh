@@ -79,51 +79,37 @@ class riscv_monitor extends uvm_monitor;
             count++;
           end
           else begin
-            // Instruction Memory Access bus
-            pu_transaction.if_stall_nxt_pc      = or1k_vif.monitor_if_mp.monitor_cb.if_stall_nxt_pc;
-            pu_transaction.if_nxt_pc            = or1k_vif.monitor_if_mp.monitor_cb.if_nxt_pc;
-            pu_transaction.if_stall             = or1k_vif.monitor_if_mp.monitor_cb.if_stall;
-            pu_transaction.if_flush             = or1k_vif.monitor_if_mp.monitor_cb.if_flush;
-            pu_transaction.if_parcel            = or1k_vif.monitor_if_mp.monitor_cb.if_parcel;
-            pu_transaction.if_parcel_pc         = or1k_vif.monitor_if_mp.monitor_cb.if_parcel_pc;
-            pu_transaction.if_parcel_valid      = or1k_vif.monitor_if_mp.monitor_cb.if_parcel_valid;
-            pu_transaction.if_parcel_misaligned = or1k_vif.monitor_if_mp.monitor_cb.if_parcel_misaligned;
-            pu_transaction.if_parcel_page_fault = or1k_vif.monitor_if_mp.monitor_cb.if_parcel_page_fault;
+            pu_transaction.debug_ring_in  = riscv_vif.monitor_if_mp.debug_ring_in;
+            pu_transaction.debug_ring_out = riscv_vif.monitor_if_mp.debug_ring_out;
 
-            // Data Memory Access bus
-            pu_transaction.dmem_adr        = or1k_vif.monitor_if_mp.monitor_cb.dmem_adr;
-            pu_transaction.dmem_d          = or1k_vif.monitor_if_mp.monitor_cb.dmem_d;
-            pu_transaction.dmem_q          = or1k_vif.monitor_if_mp.monitor_cb.dmem_q;
-            pu_transaction.dmem_we         = or1k_vif.monitor_if_mp.monitor_cb.dmem_we;
-            pu_transaction.dmem_size       = or1k_vif.monitor_if_mp.monitor_cb.dmem_size;
-            pu_transaction.dmem_req        = or1k_vif.monitor_if_mp.monitor_cb.dmem_req;
-            pu_transaction.dmem_ack        = or1k_vif.monitor_if_mp.monitor_cb.dmem_ack;
-            pu_transaction.dmem_err        = or1k_vif.monitor_if_mp.monitor_cb.dmem_err;
-            pu_transaction.dmem_misaligned = or1k_vif.monitor_if_mp.monitor_cb.dmem_misaligned;
-            pu_transaction.dmem_page_fault = or1k_vif.monitor_if_mp.monitor_cb.dmem_page_fault;
+            pu_transaction.debug_ring_in_ready  = riscv_vif.monitor_if_mp.debug_ring_in_ready;
+            pu_transaction.debug_ring_out_ready = riscv_vif.monitor_if_mp.debug_ring_out_ready;
 
-            // cpu state
-            pu_transaction.st_prv     = or1k_vif.monitor_if_mp.monitor_cb.st_prv;
-            pu_transaction.st_pmpcfg  = or1k_vif.monitor_if_mp.monitor_cb.st_pmpcfg;
-            pu_transaction.st_pmpaddr = or1k_vif.monitor_if_mp.monitor_cb.st_pmpaddr;
+            pu_transaction.ahb3_ext_hsel_i      = riscv_vif.monitor_if_mp.ahb3_ext_hsel_i;
+            pu_transaction.ahb3_ext_haddr_i     = riscv_vif.monitor_if_mp.ahb3_ext_haddr_i;
+            pu_transaction.ahb3_ext_hwdata_i    = riscv_vif.monitor_if_mp.ahb3_ext_hwdata_i;
+            pu_transaction.ahb3_ext_hwrite_i    = riscv_vif.monitor_if_mp.ahb3_ext_hwrite_i;
+            pu_transaction.ahb3_ext_hsize_i     = riscv_vif.monitor_if_mp.ahb3_ext_hsize_i;
+            pu_transaction.ahb3_ext_hburst_i    = riscv_vif.monitor_if_mp.ahb3_ext_hburst_i;
+            pu_transaction.ahb3_ext_hprot_i     = riscv_vif.monitor_if_mp.ahb3_ext_hprot_i;
+            pu_transaction.ahb3_ext_htrans_i    = riscv_vif.monitor_if_mp.ahb3_ext_htrans_i;
+            pu_transaction.ahb3_ext_hmastlock_i = riscv_vif.monitor_if_mp.ahb3_ext_hmastlock_i;
 
-            pu_transaction.bu_cacheflush = or1k_vif.monitor_if_mp.monitor_cb.bu_cacheflush;
+            pu_transaction.ahb3_ext_hrdata_o = riscv_vif.monitor_if_mp.ahb3_ext_hrdata_o;
+            pu_transaction.ahb3_ext_hready_o = riscv_vif.monitor_if_mp.ahb3_ext_hready_o;
+            pu_transaction.ahb3_ext_hresp_o  = riscv_vif.monitor_if_mp.ahb3_ext_hresp_o;
 
-            // Interrupts
-            pu_transaction.ext_nmi  = or1k_vif.monitor_if_mp.monitor_cb.ext_nmi;
-            pu_transaction.ext_tint = or1k_vif.monitor_if_mp.monitor_cb.ext_tint;
-            pu_transaction.ext_sint = or1k_vif.monitor_if_mp.monitor_cb.ext_sint;
-            pu_transaction.ext_int  = or1k_vif.monitor_if_mp.monitor_cb.ext_int;
+            // Flits from NoC->tiles
+            pu_transaction.link_in_flit  = riscv_vif.monitor_if_mp.link_in_flit;
+            pu_transaction.link_in_last  = riscv_vif.monitor_if_mp.link_in_last;
+            pu_transaction.link_in_valid = riscv_vif.monitor_if_mp.link_in_valid;
+            pu_transaction.link_in_ready = riscv_vif.monitor_if_mp.link_in_ready;
 
-            // Debug Interface
-            pu_transaction.dbg_stall = or1k_vif.monitor_if_mp.monitor_cb.dbg_stall;
-            pu_transaction.dbg_strb  = or1k_vif.monitor_if_mp.monitor_cb.dbg_strb;
-            pu_transaction.dbg_we    = or1k_vif.monitor_if_mp.monitor_cb.dbg_we;
-            pu_transaction.dbg_addr  = or1k_vif.monitor_if_mp.monitor_cb.dbg_addr;
-            pu_transaction.dbg_dati  = or1k_vif.monitor_if_mp.monitor_cb.dbg_dati;
-            pu_transaction.dbg_dato  = or1k_vif.monitor_if_mp.monitor_cb.dbg_dato;
-            pu_transaction.dbg_ack   = or1k_vif.monitor_if_mp.monitor_cb.dbg_ack;
-            pu_transaction.dbg_bp    = or1k_vif.monitor_if_mp.monitor_cb.dbg_bp;
+            // Flits from tiles->NoC
+            pu_transaction.link_out_flit  = riscv_vif.monitor_if_mp.link_out_flit;
+            pu_transaction.link_out_last  = riscv_vif.monitor_if_mp.link_out_last;
+            pu_transaction.link_out_valid = riscv_vif.monitor_if_mp.link_out_valid;
+            pu_transaction.link_out_ready = riscv_vif.monitor_if_mp.link_out_ready;
 
             // Send transaction to Scoreboard
             monitor2scoreboard_port.write(pu_transaction);
