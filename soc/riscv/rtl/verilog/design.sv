@@ -39,254 +39,160 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-interface riscv_interface #(
-  parameter            XLEN                  = 64,
-  parameter            PLEN                  = 64,
-  parameter            ILEN                  = 64,
-  parameter            EXCEPTION_SIZE        = 16,
-  parameter [XLEN-1:0] PC_INIT               = 'h200,
-  parameter            HAS_USER              = 1,
-  parameter            HAS_SUPER             = 1,
-  parameter            HAS_HYPER             = 1,
-  parameter            HAS_BPU               = 1,
-  parameter            HAS_FPU               = 1,
-  parameter            HAS_MMU               = 1,
-  parameter            HAS_RVA               = 1,
-  parameter            HAS_RVM               = 1,
-  parameter            HAS_RVC               = 1,
-  parameter            IS_RV32E              = 1,
+interface riscv_interface;
 
-  parameter            MULT_LATENCY          = 1,
+  wire clk;
+  wire rst;
+  wire rst_cpu;
+  wire rst_sys;
 
-  parameter            BREAKPOINTS           = 8,
+  dii_flit [1:0] debug_ring_in;
+  dii_flit [1:0] debug_ring_out;
 
-  parameter            PMA_CNT               = 4,
-  parameter            PMP_CNT               = 16,
+  wire [1:0] debug_ring_in_ready;
+  wire [1:0] debug_ring_out_ready;
 
-  parameter            BP_GLOBAL_BITS        = 2,
-  parameter            BP_LOCAL_BITS         = 10,
-  parameter            BP_LOCAL_BITS_LSB     = 2,
+  wire            ahb3_ext_hsel_i;
+  wire [PLEN-1:0] ahb3_ext_haddr_i;
+  wire [XLEN-1:0] ahb3_ext_hwdata_i;
+  wire            ahb3_ext_hwrite_i;
+  wire [     2:0] ahb3_ext_hsize_i;
+  wire [     2:0] ahb3_ext_hburst_i;
+  wire [     3:0] ahb3_ext_hprot_i;
+  wire [     1:0] ahb3_ext_htrans_i;
+  wire            ahb3_ext_hmastlock_i;
 
-  parameter            DU_ADDR_SIZE          = 12,
-  parameter            MAX_BREAKPOINTS       = 8,
+  wire [XLEN-1:0] ahb3_ext_hrdata_o;
+  wire            ahb3_ext_hready_o;
+  wire            ahb3_ext_hresp_o;
 
-  parameter            TECHNOLOGY            = "GENERIC",
+  // Flits from NoC->tiles
+  wire [CHANNELS-1:0][FLIT_WIDTH-1:0] link_in_flit;
+  wire [CHANNELS-1:0]                 link_in_last;
+  wire [CHANNELS-1:0]                 link_in_valid;
+  wire [CHANNELS-1:0]                 link_in_ready;
 
-  parameter            MNMIVEC_DEFAULT       = PC_INIT - 'h004,
-  parameter            MTVEC_DEFAULT         = PC_INIT - 'h040,
-  parameter            HTVEC_DEFAULT         = PC_INIT - 'h080,
-  parameter            STVEC_DEFAULT         = PC_INIT - 'h0C0,
-  parameter            UTVEC_DEFAULT         = PC_INIT - 'h100,
-
-  parameter            JEDEC_BANK            = 10,
-  parameter            JEDEC_MANUFACTURER_ID = 'h6e,
-
-  parameter            HARTID                = 0,
-
-  parameter            PARCEL_SIZE           = 64
-)
-  ();
-
-  logic                      rstn;  // Reset
-  logic                      clk;   // Clock
-
-  // Instruction Memory Access bus
-  logic                      if_stall_nxt_pc;
-  logic [XLEN          -1:0] if_nxt_pc;
-  logic                      if_stall;
-  logic                      if_flush;
-  logic [PARCEL_SIZE   -1:0] if_parcel;
-  logic [XLEN          -1:0] if_parcel_pc;
-  logic [PARCEL_SIZE/16-1:0] if_parcel_valid;
-  logic                      if_parcel_misaligned;
-  logic                      if_parcel_page_fault;
-
-  // Data Memory Access bus
-  logic [XLEN         -1:0] dmem_adr;
-  logic [XLEN         -1:0] dmem_d;
-  logic [XLEN         -1:0] dmem_q;
-  logic                     dmem_we;
-  logic [              2:0] dmem_size;
-  logic                     dmem_req;
-  logic                     dmem_ack;
-  logic                     dmem_err;
-  logic                     dmem_misaligned;
-  logic                     dmem_page_fault;
-
-  // cpu state
-  logic              [     1:0] st_prv;
-  logic [PMP_CNT-1:0][     7:0] st_pmpcfg;
-  logic [PMP_CNT-1:0][XLEN-1:0] st_pmpaddr;
-
-  logic                     bu_cacheflush;
-
-  // Interrupts
-  logic                     ext_nmi;
-  logic                     ext_tint;
-  logic                     ext_sint;
-  logic [              3:0] ext_int;
-
-  // Debug Interface
-  logic                     dbg_stall;
-  logic                     dbg_strb;
-  logic                     dbg_we;
-  logic [PLEN         -1:0] dbg_addr;
-  logic [XLEN         -1:0] dbg_dati;
-  logic [XLEN         -1:0] dbg_dato;
-  logic                     dbg_ack;
-  logic                     dbg_bp;
+  // Flits from tiles->NoC
+  wire [CHANNELS-1:0][FLIT_WIDTH-1:0] link_out_flit;
+  wire [CHANNELS-1:0]                 link_out_last;
+  wire [CHANNELS-1:0]                 link_out_valid;
+  wire [CHANNELS-1:0]                 link_out_ready;
   
   clocking master_cb @(posedge clk);
-    output rstn;  // Reset
-    output clk;   // Clock
+    output clk;
+    output rst;
+    output rst_cpu;
+    output rst_sys;
 
-    // Instruction Memory Access bus
-    output if_stall_nxt_pc;
-    input  if_nxt_pc;
-    input  if_stall;
-    input  if_flush;
-    output if_parcel;
-    output if_parcel_pc;
-    output if_parcel_valid;
-    output if_parcel_misaligned;
-    output if_parcel_page_fault;
+    output debug_ring_in;
+    input  debug_ring_out;
 
-    // Data Memory Access bus
-    input  dmem_adr;
-    input  dmem_d;
-    output dmem_q;
-    input  dmem_we;
-    input  dmem_size;
-    input  dmem_req;
-    output dmem_ack;
-    output dmem_err;
-    output dmem_misaligned;
-    output dmem_page_fault;
+    input  debug_ring_in_ready;
+    output debug_ring_out_ready;
 
-    // cpu state
-    input  st_prv;
-    input  st_pmpcfg;
-    input  st_pmpaddr;
+    input  ahb3_ext_hsel_i;
+    input  ahb3_ext_haddr_i;
+    input  ahb3_ext_hwdata_i;
+    input  ahb3_ext_hwrite_i;
+    input  ahb3_ext_hsize_i;
+    input  ahb3_ext_hburst_i;
+    input  ahb3_ext_hprot_i;
+    input  ahb3_ext_htrans_i;
+    input  ahb3_ext_hmastlock_i;
 
-    input  bu_cacheflush;
+    output ahb3_ext_hrdata_o;
+    output ahb3_ext_hready_o;
+    output ahb3_ext_hresp_o;
 
-    // Interrupts
-    output ext_nmi;
-    output ext_tint;
-    output ext_sint;
-    output ext_int;
+    // Flits from NoC->tiles
+    output link_in_flit;
+    output link_in_last;
+    output link_in_valid;
+    input  link_in_ready;
 
-    // Debug Interface
-    output dbg_stall;
-    output dbg_strb;
-    output dbg_we;
-    output dbg_addr;
-    output dbg_dati;
-    input  dbg_dato;
-    input  dbg_ack;
-    input  dbg_bp;
+    // Flits from tiles->NoC
+    input  link_out_flit;
+    input  link_out_last;
+    input  link_out_valid;
+    output link_out_ready;
   endclocking : master_cb
 
   clocking slave_cb @(posedge clk);
-    input  rstn;  // Reset
-    input  clk;   // Clock
+    input  clk;
+    input  rst;
+    input  rst_cpu;
+    input  rst_sys;
 
-    // Instruction Memory Access bus
-    input  if_stall_nxt_pc;
-    output if_nxt_pc;
-    output if_stall;
-    output if_flush;
-    input  if_parcel;
-    input  if_parcel_pc;
-    input  if_parcel_valid;
-    input  if_parcel_misaligned;
-    input  if_parcel_page_fault;
+    input  debug_ring_in;
+    output debug_ring_out;
 
-    // Data Memory Access bus
-    output dmem_adr;
-    output dmem_d;
-    input  dmem_q;
-    output dmem_we;
-    output dmem_size;
-    output dmem_req;
-    input  dmem_ack;
-    input  dmem_err;
-    input  dmem_misaligned;
-    input  dmem_page_fault;
+    output debug_ring_in_ready;
+    input  debug_ring_out_ready;
 
-    // cpu state
-    output st_prv;
-    output st_pmpcfg;
-    output st_pmpaddr;
+    output ahb3_ext_hsel_i;
+    output ahb3_ext_haddr_i;
+    output ahb3_ext_hwdata_i;
+    output ahb3_ext_hwrite_i;
+    output ahb3_ext_hsize_i;
+    output ahb3_ext_hburst_i;
+    output ahb3_ext_hprot_i;
+    output ahb3_ext_htrans_i;
+    output ahb3_ext_hmastlock_i;
 
-    output bu_cacheflush;
+    input  ahb3_ext_hrdata_o;
+    input  ahb3_ext_hready_o;
+    input  ahb3_ext_hresp_o;
 
-    // Interrupts
-    input  ext_nmi;
-    input  ext_tint;
-    input  ext_sint;
-    input  ext_int;
+    // Flits from NoC->tiles
+    input  link_in_flit;
+    input  link_in_last;
+    input  link_in_valid;
+    output link_in_ready;
 
-    // Debug Interface
-    input  dbg_stall;
-    input  dbg_strb;
-    input  dbg_we;
-    input  dbg_addr;
-    input  dbg_dati;
-    output dbg_dato;
-    output dbg_ack;
-    output dbg_bp;
+    // Flits from tiles->NoC
+    output link_out_flit;
+    output link_out_last;
+    output link_out_valid;
+    input  link_out_ready;
   endclocking : slave_cb
   
   clocking monitor_cb @(posedge clk);
-    input rstn;  // Reset
-    input clk;   // Clock
+    input clk;
+    input rst;
+    input rst_cpu;
+    input rst_sys;
 
-    // Instruction Memory Access bus
-    input if_stall_nxt_pc;
-    input if_nxt_pc;
-    input if_stall;
-    input if_flush;
-    input if_parcel;
-    input if_parcel_pc;
-    input if_parcel_valid;
-    input if_parcel_misaligned;
-    input if_parcel_page_fault;
+    input debug_ring_in;
+    input debug_ring_out;
 
-    // Data Memory Access bus
-    input dmem_adr;
-    input dmem_d;
-    input dmem_q;
-    input dmem_we;
-    input dmem_size;
-    input dmem_req;
-    input dmem_ack;
-    input dmem_err;
-    input dmem_misaligned;
-    input dmem_page_fault;
+    input debug_ring_in_ready;
+    input debug_ring_out_ready;
 
-    // cpu state
-    input st_prv;
-    input st_pmpcfg;
-    input st_pmpaddr;
+    input ahb3_ext_hsel_i;
+    input ahb3_ext_haddr_i;
+    input ahb3_ext_hwdata_i;
+    input ahb3_ext_hwrite_i;
+    input ahb3_ext_hsize_i;
+    input ahb3_ext_hburst_i;
+    input ahb3_ext_hprot_i;
+    input ahb3_ext_htrans_i;
+    input ahb3_ext_hmastlock_i;
 
-    input bu_cacheflush;
+    input ahb3_ext_hrdata_o;
+    input ahb3_ext_hready_o;
+    input ahb3_ext_hresp_o;
 
-    // Interrupts
-    input ext_nmi;
-    input ext_tint;
-    input ext_sint;
-    input ext_int;
+    // Flits from NoC->tiles
+    input link_in_flit;
+    input link_in_last;
+    input link_in_valid;
+    input link_in_ready;
 
-    // Debug Interface
-    input dbg_stall;
-    input dbg_strb;
-    input dbg_we;
-    input dbg_addr;
-    input dbg_dati;
-    input dbg_dato;
-    input dbg_ack;
-    input dbg_bp;
+    // Flits from tiles->NoC
+    input link_out_flit;
+    input link_out_last;
+    input link_out_valid;
+    input link_out_ready;
   endclocking : monitor_cb
 
   modport master(clocking master_cb);

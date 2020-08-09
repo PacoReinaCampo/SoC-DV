@@ -62,86 +62,47 @@ module test;
   riscv_interface riscv_if();
 
   // Instantiate dut
-  riscv_core #(
-    .XLEN                  ( XLEN                  ),
-    .PLEN                  ( PLEN                  ),
-    .HAS_USER              ( HAS_USER              ),
-    .HAS_SUPER             ( HAS_SUPER             ),
-    .HAS_HYPER             ( HAS_HYPER             ),
-    .HAS_BPU               ( HAS_BPU               ),
-    .HAS_FPU               ( HAS_FPU               ),
-    .HAS_MMU               ( HAS_MMU               ),
-    .HAS_RVM               ( HAS_RVM               ),
-    .HAS_RVA               ( HAS_RVA               ),
-    .HAS_RVC               ( HAS_RVC               ),
-    .IS_RV32E              ( IS_RV32E              ),
-
-    .MULT_LATENCY          ( MULT_LATENCY          ),
-
-    .BREAKPOINTS           ( BREAKPOINTS           ),
-    .PMP_CNT               ( PMP_CNT               ),
-
-    .BP_GLOBAL_BITS        ( BP_GLOBAL_BITS        ),
-    .BP_LOCAL_BITS         ( BP_LOCAL_BITS         ),
-
-    .TECHNOLOGY            ( TECHNOLOGY            ),
-
-    .MNMIVEC_DEFAULT       ( MNMIVEC_DEFAULT       ),
-    .MTVEC_DEFAULT         ( MTVEC_DEFAULT         ),
-    .HTVEC_DEFAULT         ( HTVEC_DEFAULT         ),
-    .STVEC_DEFAULT         ( STVEC_DEFAULT         ),
-    .UTVEC_DEFAULT         ( UTVEC_DEFAULT         ),
-
-    .JEDEC_BANK            ( JEDEC_BANK            ),
-    .JEDEC_MANUFACTURER_ID ( JEDEC_MANUFACTURER_ID ),
-
-    .HARTID                ( HARTID                ), 
-
-    .PC_INIT               ( PC_INIT               ),
-    .PARCEL_SIZE           ( PARCEL_SIZE           )
+  riscv_tile #(
+    .CONFIG       (CONFIG),
+    .ID           (0),
+    .MEM_FILE     ("ct.vmem"),
+    .DEBUG_BASEID ((CONFIG.DEBUG_LOCAL_SUBNET << (16 - CONFIG.DEBUG_SUBNET_BITS)) + 1)
   )
   dut (
-    .rstn                 ( riscv_if.rstn                 ),
-    .clk                  ( riscv_if.clk                  ),
+    .clk                        ( riscv_if.clk     ),
+    .rst_dbg                    ( riscv_if.rst     ),
+    .rst_cpu                    ( riscv_if.rst_cpu ),
+    .rst_sys                    ( riscv_if.rst_sys ),
 
-    .if_stall_nxt_pc      ( riscv_if.if_stall_nxt_pc      ),
-    .if_nxt_pc            ( riscv_if.if_nxt_pc            ),
-    .if_stall             ( riscv_if.if_stall             ),
-    .if_flush             ( riscv_if.if_flush             ),
-    .if_parcel            ( riscv_if.if_parcel            ),
-    .if_parcel_pc         ( riscv_if.if_parcel_pc         ),
-    .if_parcel_valid      ( riscv_if.if_parcel_valid      ),
-    .if_parcel_misaligned ( riscv_if.if_parcel_misaligned ),
-    .if_parcel_page_fault ( riscv_if.if_parcel_page_fault ),
-    .dmem_adr             ( riscv_if.dmem_adr             ),
-    .dmem_d               ( riscv_if.dmem_d               ),
-    .dmem_q               ( riscv_if.dmem_q               ),
-    .dmem_we              ( riscv_if.dmem_we              ),
-    .dmem_size            ( riscv_if.dmem_size            ),
-    .dmem_req             ( riscv_if.dmem_req             ),
-    .dmem_ack             ( riscv_if.dmem_ack             ),
-    .dmem_err             ( riscv_if.dmem_err             ),
-    .dmem_misaligned      ( riscv_if.dmem_misaligned      ),
-    .dmem_page_fault      ( riscv_if.dmem_page_fault      ),
-    .st_prv               ( riscv_if.st_prv               ),
-    .st_pmpcfg            ( riscv_if.st_pmpcfg            ),
-    .st_pmpaddr           ( riscv_if.st_pmpaddr           ),
+    .debug_ring_in              ( riscv_if.debug_ring_in        ),
+    .debug_ring_in_ready        ( riscv_if.debug_ring_in_ready  ),
+    .debug_ring_out             ( riscv_if.debug_ring_out       ),
+    .debug_ring_out_ready       ( riscv_if.debug_ring_out_ready ),
 
-    .bu_cacheflush        ( riscv_if.cacheflush           ),
+    .ahb3_ext_hsel_i            ( riscv_if.ahb3_ext_hsel_i      ),
+    .ahb3_ext_haddr_i           ( riscv_if.ahb3_ext_haddr_i     ),
+    .ahb3_ext_hwdata_i          ( riscv_if.ahb3_ext_hwdata_i    ),
+    .ahb3_ext_hwrite_i          ( riscv_if.ahb3_ext_hwrite_i    ),
+    .ahb3_ext_hsize_i           ( riscv_if.ahb3_ext_hsize_i     ),
+    .ahb3_ext_hburst_i          ( riscv_if.ahb3_ext_hburst_i    ),
+    .ahb3_ext_hprot_i           ( riscv_if.ahb3_ext_hprot_i     ),
+    .ahb3_ext_htrans_i          ( riscv_if.ahb3_ext_htrans_i    ),
 
-    .ext_nmi              ( riscv_if.ext_nmi              ),
-    .ext_tint             ( riscv_if.ext_tint             ),
-    .ext_sint             ( riscv_if.ext_sint             ),
-    .ext_int              ( riscv_if.ext_int              ),
-    .dbg_stall            ( riscv_if.dbg_stall            ),
-    .dbg_strb             ( riscv_if.dbg_strb             ),
-    .dbg_we               ( riscv_if.dbg_we               ),
-    .dbg_addr             ( riscv_if.dbg_addr             ),
-    .dbg_dati             ( riscv_if.dbg_dati             ),
-    .dbg_dato             ( riscv_if.dbg_dato             ),
-    .dbg_ack              ( riscv_if.dbg_ack              ),
-    .dbg_bp               ( riscv_if.dbg_bp               )
-  ); 
+    .ahb3_ext_hmastlock_i       ( riscv_if.ahb3_ext_hmastlock_i ),
+    .ahb3_ext_hrdata_o          ( riscv_if.ahb3_ext_hrdata_o    ),
+    .ahb3_ext_hready_o          ( riscv_if.ahb3_ext_hready_o    ),
+    .ahb3_ext_hresp_o           ( riscv_if.ahb3_ext_hresp_o     ),
+
+    .noc_in_ready               ( riscv_if.link_in_ready  ),
+    .noc_out_flit               ( riscv_if.link_out_flit  ),
+    .noc_out_last               ( riscv_if.link_out_last  ),
+    .noc_out_valid              ( riscv_if.link_out_valid ),
+
+    .noc_in_flit                ( riscv_if.link_in_flit   ),
+    .noc_in_last                ( riscv_if.link_in_last   ),
+    .noc_in_valid               ( riscv_if.link_in_valid  ),
+    .noc_out_ready              ( riscv_if.link_out_ready )
+  );
 
   //Clock generation
   always #5 riscv_if.clk = ~riscv_if.clk;
