@@ -44,14 +44,42 @@ class riscv_transaction extends uvm_sequence_item;
 
   rand bit [15:0] instrn;
 
-  bit [ 7:0] pc;
-  bit [15:0] inst_out;
-  bit [15:0] reg_data;
-  bit [ 1:0] reg_en;
-  bit [ 2:0] reg_add;
-  bit [15:0] mem_data;
-  bit        mem_en;
-  bit [ 2:0] mem_add;
+  bit clk;
+  bit rst;
+  bit rst_cpu;
+  bit rst_sys;
+
+  dii_flit [1:0] debug_ring_in;
+  dii_flit [1:0] debug_ring_out;
+
+  bit [1:0] debug_ring_in_ready;
+  bit [1:0] debug_ring_out_ready;
+
+  bit            ahb3_ext_hsel_i;
+  bit [PLEN-1:0] ahb3_ext_haddr_i;
+  bit [XLEN-1:0] ahb3_ext_hwdata_i;
+  bit            ahb3_ext_hwrite_i;
+  bit [     2:0] ahb3_ext_hsize_i;
+  bit [     2:0] ahb3_ext_hburst_i;
+  bit [     3:0] ahb3_ext_hprot_i;
+  bit [     1:0] ahb3_ext_htrans_i;
+  bit            ahb3_ext_hmastlock_i;
+
+  bit [XLEN-1:0] ahb3_ext_hrdata_o;
+  bit            ahb3_ext_hready_o;
+  bit            ahb3_ext_hresp_o;
+
+  // Flits from NoC->tiles
+  bit [CHANNELS-1:0][FLIT_WIDTH-1:0] link_in_flit;
+  bit [CHANNELS-1:0]                 link_in_last;
+  bit [CHANNELS-1:0]                 link_in_valid;
+  bit [CHANNELS-1:0]                 link_in_ready;
+
+  // Flits from tiles->NoC
+  bit [CHANNELS-1:0][FLIT_WIDTH-1:0] link_out_flit;
+  bit [CHANNELS-1:0]                 link_out_last;
+  bit [CHANNELS-1:0]                 link_out_valid;
+  bit [CHANNELS-1:0]                 link_out_ready;
 
   constraint input_constraint {
     //Cosntraint to prevent EOF operation

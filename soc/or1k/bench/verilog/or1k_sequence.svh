@@ -39,172 +39,99 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "or1k-defines.sv"
+import dii_package::dii_flit;
+import opensocdebug::mor1kx_trace_exec;
+import optimsoc_config::*;
+import optimsoc_functions::*;
 
 class or1k_transaction extends uvm_sequence_item;
   `uvm_object_utils(or1k_transaction)
 
-  parameter OPTION_OPERAND_WIDTH = 32;
+  parameter AW = 32;
+  parameter DW = 32;
 
-  parameter OPTION_CPU0 = "CAPPUCCINO";
+  // Simulation parameters
+  parameter USE_DEBUG = 0;
+  parameter integer NUM_CORES = 1;
+  parameter integer LMEM_SIZE = 128*1024*1024;
 
-  parameter FEATURE_DATACACHE          = "NONE";
-  parameter OPTION_DCACHE_BLOCK_WIDTH  = 5;
-  parameter OPTION_DCACHE_SET_WIDTH    = 9;
-  parameter OPTION_DCACHE_WAYS         = 2;
-  parameter OPTION_DCACHE_LIMIT_WIDTH  = 32;
-  parameter OPTION_DCACHE_SNOOP        = "NONE";
-  parameter FEATURE_DMMU               = "NONE";
-  parameter FEATURE_DMMU_HW_TLB_RELOAD = "NONE";
-  parameter OPTION_DMMU_SET_WIDTH      = 6;
-  parameter OPTION_DMMU_WAYS           = 1;
-  parameter FEATURE_INSTRUCTIONCACHE   = "NONE";
-  parameter OPTION_ICACHE_BLOCK_WIDTH  = 5;
-  parameter OPTION_ICACHE_SET_WIDTH    = 9;
-  parameter OPTION_ICACHE_WAYS         = 2;
-  parameter OPTION_ICACHE_LIMIT_WIDTH  = 32;
-  parameter FEATURE_IMMU               = "NONE";
-  parameter FEATURE_IMMU_HW_TLB_RELOAD = "NONE";
-  parameter OPTION_IMMU_SET_WIDTH      = 6;
-  parameter OPTION_IMMU_WAYS           = 1;
-  parameter FEATURE_TIMER              = "ENABLED";
-  parameter FEATURE_DEBUGUNIT          = "NONE";
-  parameter FEATURE_PERFCOUNTERS       = "NONE";
-  parameter OPTION_PERFCOUNTERS_NUM    = 0;
-  parameter FEATURE_MAC                = "NONE";
+  localparam base_config_t
+  BASE_CONFIG = '{NUMTILES: 1,
+                  NUMCTS: 1,
+                  CTLIST: {{63{16'hx}}, 16'h0},
+                  CORES_PER_TILE: NUM_CORES,
+                  GMEM_SIZE: 0,
+                  GMEM_TILE: 0,
+                  NOC_ENABLE_VCHANNELS: 0,
+                  LMEM_SIZE: LMEM_SIZE,
+                  LMEM_STYLE: PLAIN,
+                  ENABLE_BOOTROM: 0,
+                  BOOTROM_SIZE: 0,
+                  ENABLE_DM: 1,
+                  DM_BASE: 32'h0,
+                  DM_SIZE: LMEM_SIZE,
+                  ENABLE_PGAS: 0,
+                  PGAS_BASE: 0,
+                  PGAS_SIZE: 0,
+                  CORE_ENABLE_FPU: 0,
+                  CORE_ENABLE_PERFCOUNTERS: 0,
+                  NA_ENABLE_MPSIMPLE: 1,
+                  NA_ENABLE_DMA: 1,
+                  NA_DMA_GENIRQ: 1,
+                  NA_DMA_ENTRIES: 4,
+                  USE_DEBUG: 1'(USE_DEBUG),
+                  DEBUG_STM: 1,
+                  DEBUG_CTM: 1,
+                  DEBUG_DEM_UART: 1,
+                  DEBUG_SUBNET_BITS: 6,
+                  DEBUG_LOCAL_SUBNET: 0,
+                  DEBUG_ROUTER_BUFFER_SIZE: 4,
+                  DEBUG_MAX_PKT_LEN: 12
+                  };
 
-  parameter FEATURE_SYSCALL = "ENABLED";
-  parameter FEATURE_TRAP    = "ENABLED";
-  parameter FEATURE_RANGE   = "ENABLED";
+  localparam config_t CONFIG = derive_config(BASE_CONFIG);
 
-  parameter FEATURE_PIC          = "ENABLED";
-  parameter OPTION_PIC_TRIGGER   = "LEVEL";
-  parameter OPTION_PIC_NMI_WIDTH = 0;
-
-  parameter FEATURE_DSX        = "NONE";
-  parameter FEATURE_OVERFLOW   = "NONE";
-  parameter FEATURE_CARRY_FLAG = "ENABLED";
-
-  parameter FEATURE_FASTCONTEXTS     = "NONE";
-  parameter OPTION_RF_CLEAR_ON_INIT  = 0;
-  parameter OPTION_RF_NUM_SHADOW_GPR = 0;
-  parameter OPTION_RF_ADDR_WIDTH     = 5;
-  parameter OPTION_RF_WORDS          = 32;
-
-  parameter OPTION_RESET_PC = {{(OPTION_OPERAND_WIDTH-13){1'b0}}, `OR1K_RESET_VECTOR, 8'd0};
-
-  parameter OPTION_TCM_FETCHER = "DISABLED";
-
-  parameter FEATURE_MULTIPLIER = "THREESTAGE";
-  parameter FEATURE_DIVIDER    = "NONE";
-
-  parameter OPTION_SHIFTER = "BARREL";
-
-  parameter FEATURE_ADDC   = "NONE";
-  parameter FEATURE_SRA    = "ENABLED";
-  parameter FEATURE_ROR    = "NONE";
-  parameter FEATURE_EXT    = "NONE";
-  parameter FEATURE_CMOV   = "NONE";
-  parameter FEATURE_FFL1   = "NONE";
-  parameter FEATURE_MSYNC  = "ENABLED";
-  parameter FEATURE_PSYNC  = "NONE";
-  parameter FEATURE_CSYNC  = "NONE";
-  parameter FEATURE_ATOMIC = "ENABLED";
-
-  parameter FEATURE_FPU          = "NONE"; // ENABLED|NONE
-  parameter OPTION_FTOI_ROUNDING = "CPP"; // "CPP" / "IEEE"
-
-  parameter FEATURE_CUST1 = "NONE";
-  parameter FEATURE_CUST2 = "NONE";
-  parameter FEATURE_CUST3 = "NONE";
-  parameter FEATURE_CUST4 = "NONE";
-  parameter FEATURE_CUST5 = "NONE";
-  parameter FEATURE_CUST6 = "NONE";
-  parameter FEATURE_CUST7 = "NONE";
-  parameter FEATURE_CUST8 = "NONE";
-
-  parameter FEATURE_STORE_BUFFER            = "ENABLED";
-  parameter OPTION_STORE_BUFFER_DEPTH_WIDTH = 8;
-
-  parameter FEATURE_MULTICORE = "NONE";
-
-  parameter FEATURE_TRACEPORT_EXEC   = "NONE";
-  parameter FEATURE_BRANCH_PREDICTOR = "SIMPLE";
+  localparam CHANNELS   = CONFIG.NOC_CHANNELS;
+  localparam FLIT_WIDTH = CONFIG.NOC_FLIT_WIDTH;
 
   rand bit [15:0] instrn;
 
-  // Instruction bus
-  bit                            ibus_err_i;
-  bit                            ibus_ack_i;
-  bit [`OR1K_INSN_WIDTH    -1:0] ibus_dat_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] ibus_adr_o;
-  bit                            ibus_req_o;
-  bit                            ibus_burst_o;
+  bit clk;
+  bit rst;
+  bit rst_cpu;
+  bit rst_sys;
 
-  // Data bus
-  bit                            dbus_err_i;
-  bit                            dbus_ack_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] dbus_dat_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] dbus_adr_o;
-  bit [OPTION_OPERAND_WIDTH-1:0] dbus_dat_o;
-  bit                            dbus_req_o;
-  bit [                     3:0] dbus_bsel_o;
-  bit                            dbus_we_o;
-  bit                            dbus_burst_o;
+  dii_flit [1:0] debug_ring_in;
+  dii_flit [1:0] debug_ring_out;
 
-  // Interrupts
-  bit [                     31:0] irq_i;
+  bit [1:0] debug_ring_in_ready;
+  bit [1:0] debug_ring_out_ready;
 
-  // Debug interface
-  bit [                    15:0] du_addr_i;
-  bit                            du_stb_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] du_dat_i;
-  bit                            du_we_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] du_dat_o;
-  bit                            du_ack_o;
+  bit [AW-1:0] wb_ext_adr_i;
+  bit          wb_ext_cyc_i;
+  bit [DW-1:0] wb_ext_dat_i;
+  bit [   3:0] wb_ext_sel_i;
+  bit          wb_ext_stb_i;
+  bit          wb_ext_we_i;
+  bit          wb_ext_cab_i;
+  bit [   2:0] wb_ext_cti_i;
+  bit [   1:0] wb_ext_bte_i;
+  bit          wb_ext_ack_o;
+  bit          wb_ext_rty_o;
+  bit          wb_ext_err_o;
+  bit [DW-1:0] wb_ext_dat_o;
 
-  // Stall control from debug interface
-  bit                            du_stall_i;
-  bit                            du_stall_o;
+  // Flits from NoC->tiles
+  bit [CHANNELS-1:0][FLIT_WIDTH-1:0] link_in_flit;
+  bit [CHANNELS-1:0]                 link_in_last;
+  bit [CHANNELS-1:0]                 link_in_valid;
+  bit [CHANNELS-1:0]                 link_in_ready;
 
-  bit                            traceport_exec_valid_o;
-  bit [                    31:0] traceport_exec_pc_o;
-  bit                            traceport_exec_jb_o;
-  bit                            traceport_exec_jal_o;
-  bit                            traceport_exec_jr_o;
-  bit [                    31:0] traceport_exec_jbtarget_o;
-  bit [`OR1K_INSN_WIDTH    -1:0] traceport_exec_insn_o;
-  bit [OPTION_OPERAND_WIDTH-1:0] traceport_exec_wbdata_o;
-  bit [OPTION_RF_ADDR_WIDTH-1:0] traceport_exec_wbreg_o;
-  bit                            traceport_exec_wben_o;
-
-  // SPR accesses to external units (cache; mmu; etc.)
-  bit [                    15:0] spr_bus_addr_o;
-  bit                            spr_bus_we_o;
-  bit                            spr_bus_stb_o;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_o;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_dmmu_i;
-  bit                            spr_bus_ack_dmmu_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_immu_i;
-  bit                            spr_bus_ack_immu_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_mac_i;
-  bit                            spr_bus_ack_mac_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_pmu_i;
-  bit                            spr_bus_ack_pmu_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_pcu_i;
-  bit                            spr_bus_ack_pcu_i;
-  bit [OPTION_OPERAND_WIDTH-1:0] spr_bus_dat_fpu_i;
-  bit                            spr_bus_ack_fpu_i;
-  bit [                    15:0] spr_sr_o;
-
-  // The multicore core identifier
-  bit [OPTION_OPERAND_WIDTH-1:0] multicore_coreid_i;
-
-  // The number of cores
-  bit [OPTION_OPERAND_WIDTH-1:0] multicore_numcores_i;
-
-  bit [                    31:0] snoop_adr_i;
-  bit                            snoop_en_i;
+  // Flits from tiles->NoC
+  bit [CHANNELS-1:0][FLIT_WIDTH-1:0] link_out_flit;
+  bit [CHANNELS-1:0]                 link_out_last;
+  bit [CHANNELS-1:0]                 link_out_valid;
+  bit [CHANNELS-1:0]                 link_out_ready;
 
   constraint input_constraint {
     //Cosntraint to prevent EOF operation

@@ -94,7 +94,7 @@ class or1k_subscriber extends uvm_subscriber #(or1k_transaction);
 
   // Write function for the analysis port
   function void write(or1k_transaction t);
-    instruction = t.spr_bus_dat_immu_i;
+    instruction = t.wb_ext_dat_o;
     cover_processor.sample();
   endfunction
 endclass
