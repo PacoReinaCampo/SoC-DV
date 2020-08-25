@@ -56,7 +56,53 @@ import uvm_pkg::*;
 
 `include "riscv_mpsoc_pkg.sv"
 
+import dii_package::dii_flit;
+import opensocdebug::mriscv_trace_exec;
+import optimsoc_config::*;
+import optimsoc_functions::*;
+
 module test;
+
+  // Simulation parameters
+  parameter USE_DEBUG = 0;
+  parameter integer NUM_CORES = 1;
+  parameter integer LMEM_SIZE = 128*1024*1024;
+
+  localparam base_config_t
+  BASE_CONFIG = '{NUMTILES: 1,
+                  NUMCTS: 1,
+                  CTLIST: {{63{16'hx}}, 16'h0},
+                  CORES_PER_TILE: NUM_CORES,
+                  GMEM_SIZE: 0,
+                  GMEM_TILE: 0,
+                  NOC_ENABLE_VCHANNELS: 0,
+                  LMEM_SIZE: LMEM_SIZE,
+                  LMEM_STYLE: PLAIN,
+                  ENABLE_BOOTROM: 0,
+                  BOOTROM_SIZE: 0,
+                  ENABLE_DM: 1,
+                  DM_BASE: 32'h0,
+                  DM_SIZE: LMEM_SIZE,
+                  ENABLE_PGAS: 0,
+                  PGAS_BASE: 0,
+                  PGAS_SIZE: 0,
+                  CORE_ENABLE_FPU: 0,
+                  CORE_ENABLE_PERFCOUNTERS: 0,
+                  NA_ENABLE_MPSIMPLE: 1,
+                  NA_ENABLE_DMA: 1,
+                  NA_DMA_GENIRQ: 1,
+                  NA_DMA_ENTRIES: 4,
+                  USE_DEBUG: 1'(USE_DEBUG),
+                  DEBUG_STM: 1,
+                  DEBUG_CTM: 1,
+                  DEBUG_DEM_UART: 1,
+                  DEBUG_SUBNET_BITS: 6,
+                  DEBUG_LOCAL_SUBNET: 0,
+                  DEBUG_ROUTER_BUFFER_SIZE: 4,
+                  DEBUG_MAX_PKT_LEN: 12
+                  };
+
+  localparam config_t CONFIG = derive_config(BASE_CONFIG);
 
   // Instantiate interface
   riscv_interface riscv_if();

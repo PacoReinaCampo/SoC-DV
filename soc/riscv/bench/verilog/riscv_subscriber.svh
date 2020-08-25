@@ -94,7 +94,7 @@ class riscv_subscriber extends uvm_subscriber #(riscv_transaction);
 
   // Write function for the analysis port
   function void write(riscv_transaction t);
-    instruction = t.dbg_dato;
+    instruction = t.ahb3_ext_hrdata_o;
     cover_processor.sample();
   endfunction
 endclass
