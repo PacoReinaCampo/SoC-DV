@@ -24,9 +24,9 @@
 ../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/ctm/msp430/mmsp430/osd_ctm_mmsp430.sv
 ../../../../../../soc-msp430/dbg/rtl/verilog/soc/blocks/eventpacket/osd_event_packetization_fixedwidth.sv
 ../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/him/osd_him.sv
-../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/bb/mam_bb_adapter.sv
-../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/bb/osd_mam_bb_if.sv
-../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/bb/osd_mam_bb.sv
+../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/blackbone/mam_bb_adapter.sv
+../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/blackbone/osd_mam_bb_if.sv
+../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/blackbone/osd_mam_bb.sv
 ../../../../../../soc-msp430/dbg/rtl/verilog/soc/modules/mam/common/osd_mam.sv
 ../../../../../../soc-msp430/dbg/rtl/verilog/soc/blocks/eventpacket/osd_event_packetization.sv
 ../../../../../../soc-msp430/dbg/rtl/verilog/soc/blocks/regaccess/osd_regaccess_demux.sv
@@ -84,7 +84,7 @@
 ../../../../../../soc-msp430/pu/rtl/verilog/core/fuse/msp430_wakeup_cell.sv
 
 ../../../../../../soc-msp430/pu/rtl/verilog/core/omsp/msp430_alu.sv
-../../../../../../soc-msp430/pu/rtl/verilog/core/omsp/msp430_dbg_hbbrk.sv
+../../../../../../soc-msp430/pu/rtl/verilog/core/omsp/msp430_dbg_hwbrk.sv
 ../../../../../../soc-msp430/pu/rtl/verilog/core/omsp/msp430_dbg_i2c.sv
 ../../../../../../soc-msp430/pu/rtl/verilog/core/omsp/msp430_dbg_uart.sv
 ../../../../../../soc-msp430/pu/rtl/verilog/core/omsp/msp430_register_file.sv
