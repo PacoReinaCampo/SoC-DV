@@ -1,6 +1,0 @@
-rm -f *.tex
-rm -f *.pdf
-
-pandoc README.md -s -o UVM.pdf
-pandoc ../README.md -s -o SoC-UVM.tex
-pandoc ../README.md -s -o SoC-UVM.pdf
