@@ -7,12 +7,3 @@
 [submodule "osvvm"]
 	path = osvvm
 	url = https://github.com/PacoReinaCampo/OSVVM.git
-[submodule "soc-msp430"]
-	path = soc-msp430
-	url = https://github.com/PacoReinaCampo/SoC-MSP430.git
-[submodule "soc-or1k"]
-	path = soc-or1k
-	url = https://github.com/PacoReinaCampo/SoC-OR1K.git
-[submodule "soc-riscv"]
-	path = soc-riscv
-	url = https://github.com/PacoReinaCampo/SoC-RISCV.git
