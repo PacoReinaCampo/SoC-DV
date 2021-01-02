@@ -104,7 +104,7 @@
 ../../../../../../soc-msp430/pu/rtl/verilog/core/main/msp430_ta.sv
 ../../../../../../soc-msp430/pu/rtl/verilog/core/main/msp430_watchdog.sv
 
-../../../../../../soc-msp430/pu/rtl/verilog/pu/msp430_pu.sv
+../../../../../../soc-msp430/pu/rtl/verilog/pu/msp430_core.sv
 
 ../../../../../../soc-msp430/rtl/verilog/soc/adapter/networkadapter_conf.sv
 ../../../../../../soc-msp430/rtl/verilog/soc/adapter/networkadapter_ct.sv
