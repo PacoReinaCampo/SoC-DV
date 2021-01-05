@@ -116,6 +116,7 @@
 
 ../../../../../../soc-riscv/pu/rtl/verilog/pu/riscv_biu2ahb3.sv
 ../../../../../../soc-riscv/pu/rtl/verilog/pu/riscv_pu_ahb3.sv
+../../../../../../soc-riscv/pu/rtl/verilog/pu/riscv_module_ahb3.sv
 
 ../../../../../../soc-riscv/rtl/verilog/soc/adapter/networkadapter_conf.sv
 ../../../../../../soc-riscv/rtl/verilog/soc/adapter/networkadapter_ct.sv
