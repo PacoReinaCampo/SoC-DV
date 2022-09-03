@@ -1735,7 +1735,7 @@ Qualification}}{7.8.4. Tool Assessment and Qualification}}\label{tool-assessment
 
 \begin{verbatim}
 cd synthesis/yosys
-source SYNTHESIZE-IT
+source synthesize.sh
 \end{verbatim}
 
 \hypertarget{asic-1}{%
@@ -1745,7 +1745,7 @@ type:
 
 \begin{verbatim}
 cd synthesis/qflow
-source FLOW-IT
+source flow.sh
 \end{verbatim}
 
 \hypertarget{fpga-1}{%
@@ -1755,7 +1755,7 @@ type:
 
 \begin{verbatim}
 cd synthesis/symbiflow
-source FLOW-IT
+source flow.sh
 \end{verbatim}
 
 \hypertarget{software-1}{%
@@ -3500,17 +3500,17 @@ sudo make install
 
 \begin{verbatim}
 cd sim/verilog/regression/wb/vtor
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \begin{verbatim}
 cd sim/verilog/regression/ahb3/vtor
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \begin{verbatim}
 cd sim/verilog/regression/axi4/vtor
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \hypertarget{verifying-system-level-of-hardware-1}{%
@@ -3579,17 +3579,17 @@ sudo make install
 
 \begin{verbatim}
 cd sim/vhdl/regression/wb/ghdl
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \begin{verbatim}
 cd sim/vhdl/regression/ahb3/ghdl
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \begin{verbatim}
 cd sim/vhdl/regression/axi4/ghdl
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \textbf{Verilog Hardware Description Language Simulator}
@@ -3608,17 +3608,17 @@ sudo make install
 
 \begin{verbatim}
 cd sim/verilog/regression/wb/iverilog
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \begin{verbatim}
 cd sim/verilog/regression/ahb3/iverilog
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \begin{verbatim}
 cd sim/verilog/regression/axi4/iverilog
-source SIMULATE-IT
+source simulate.sh
 \end{verbatim}
 
 \hypertarget{synthesizing-register-transfer-level-of-hardware-1}{%
@@ -3647,7 +3647,7 @@ sudo make install
 
 \begin{verbatim}
 cd synthesis/yosys
-source SYNTHESIZE-IT
+source synthesize.sh
 \end{verbatim}
 
 \textbf{VHDL Hardware Description Language Synthesizer}
@@ -3665,7 +3665,7 @@ sudo yosys-config --exec cp "ghdl.so" --datdir/plugins/ghdl.so
 
 \begin{verbatim}
 cd synthesis/yosys
-source SYNTHESIZE-IT
+source synthesize.sh
 \end{verbatim}
 
 \hypertarget{optimizing-register-transfer-level-of-hardware-1}{%
@@ -3694,7 +3694,7 @@ sudo make install
 
 \begin{verbatim}
 cd synthesis/yosys
-source SYNTHESIZE-IT
+source synthesize.sh
 \end{verbatim}
 
 \hypertarget{verifying-register-transfer-level-of-hardware-1}{%
@@ -3908,7 +3908,7 @@ sudo make install
 
 \begin{verbatim}
 cd synthesis/qflow
-source FLOW-IT
+source flow.sh
 \end{verbatim}
 
 \hypertarget{checking-switch-level-of-hardware-drc-1}{%
