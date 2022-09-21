@@ -1,8 +1,8 @@
 ---
-title: 'SoC-NTM (T-DNC/NTM-SoC)'
+title: 'SoC-DV'
 subtitle: 'QueenField ![](../../icon.jpg)'
 
 author: Paco Reina Campo
 
-abstract: Neural Turing Machine for a System on Chip verified with UVM/OSVVM/FV.
+abstract: System on Chip verified with UVM/OSVVM/FV.
 ---
