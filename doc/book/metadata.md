@@ -1,6 +1,6 @@
 ---
 title: 'SoC-DV'
-subtitle: 'QueenField ![](../../icon.jpg)'
+subtitle: 'QueenField ![](../../soc-dv.svg){width=17cm}'
 
 author: Paco Reina Campo
 
