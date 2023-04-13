@@ -42,16 +42,16 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
--i ../../../../../../../../soc/riscv/library/wb
+-i ../../../../../../../../soc/riscv/uvm/library/wb
 
-../../../../../../../../soc/riscv/application/wb/peripheral_adder.sv
-../../../../../../../../soc/riscv/application/wb/peripheral_full_adder.sv
-../../../../../../../../soc/riscv/application/wb/peripheral_half_adder.sv
+../../../../../../../../soc/riscv/uvm/application/wb/peripheral_adder.sv
+../../../../../../../../soc/riscv/uvm/application/wb/peripheral_full_adder.sv
+../../../../../../../../soc/riscv/uvm/application/wb/peripheral_half_adder.sv
 
-../../../../../../../../soc/riscv/pkg/wb/peripheral_uvm_agent_pkg.sv
-../../../../../../../../soc/riscv/pkg/wb/peripheral_uvm_reference_model_pkg.sv
-../../../../../../../../soc/riscv/pkg/wb/peripheral_uvm_environment_pkg.sv
-../../../../../../../../soc/riscv/pkg/wb/peripheral_uvm_sequence_pkg.sv
-../../../../../../../../soc/riscv/pkg/wb/peripheral_uvm_test_pkg.sv
+../../../../../../../../soc/riscv/uvm/pkg/wb/peripheral_uvm_agent_pkg.sv
+../../../../../../../../soc/riscv/uvm/pkg/wb/peripheral_uvm_reference_model_pkg.sv
+../../../../../../../../soc/riscv/uvm/pkg/wb/peripheral_uvm_environment_pkg.sv
+../../../../../../../../soc/riscv/uvm/pkg/wb/peripheral_uvm_sequence_pkg.sv
+../../../../../../../../soc/riscv/uvm/pkg/wb/peripheral_uvm_test_pkg.sv
 
-../../../../../../../../soc/riscv/library/wb/peripheral_uvm_testbench.sv
+../../../../../../../../soc/riscv/uvm/library/wb/peripheral_uvm_testbench.sv
