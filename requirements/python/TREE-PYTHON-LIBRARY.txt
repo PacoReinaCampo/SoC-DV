@@ -10,7 +10,29 @@ library
 │   │   └── peripheral_design.py
 │   └── wb
 │       └── peripheral_design.py
-└── core
+├── core
+│   ├── ahb3
+│   │   └── peripheral_design.py
+│   ├── apb4
+│   │   └── peripheral_design.py
+│   ├── axi4
+│   │   └── peripheral_design.py
+│   ├── bb
+│   │   └── peripheral_design.py
+│   └── wb
+│       └── peripheral_design.py
+├── pu
+│   ├── ahb3
+│   │   └── peripheral_design.py
+│   ├── apb4
+│   │   └── peripheral_design.py
+│   ├── axi4
+│   │   └── peripheral_design.py
+│   ├── bb
+│   │   └── peripheral_design.py
+│   └── wb
+│       └── peripheral_design.py
+└── soc
     ├── ahb3
     │   └── peripheral_design.py
     ├── apb4
@@ -22,4 +44,4 @@ library
     └── wb
         └── peripheral_design.py
 
-12 directories, 10 files
+24 directories, 20 files

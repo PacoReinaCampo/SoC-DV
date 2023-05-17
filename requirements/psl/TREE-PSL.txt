@@ -10,7 +10,29 @@ library
 │   │   └── peripheral_design.psl
 │   └── wb
 │       └── peripheral_design.psl
-└── core
+├── core
+│   ├── ahb3
+│   │   └── peripheral_design.psl
+│   ├── apb4
+│   │   └── peripheral_design.psl
+│   ├── axi4
+│   │   └── peripheral_design.psl
+│   ├── bb
+│   │   └── peripheral_design.psl
+│   └── wb
+│       └── peripheral_design.psl
+├── pu
+│   ├── ahb3
+│   │   └── peripheral_design.psl
+│   ├── apb4
+│   │   └── peripheral_design.psl
+│   ├── axi4
+│   │   └── peripheral_design.psl
+│   ├── bb
+│   │   └── peripheral_design.psl
+│   └── wb
+│       └── peripheral_design.psl
+└── soc
     ├── ahb3
     │   └── peripheral_design.psl
     ├── apb4
@@ -22,4 +44,4 @@ library
     └── wb
         └── peripheral_design.psl
 
-12 directories, 10 files
+24 directories, 20 files

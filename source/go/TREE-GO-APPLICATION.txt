@@ -10,7 +10,29 @@ application
 │   │   └── test_peripheral.go
 │   └── wb
 │       └── test_peripheral.go
-└── core
+├── core
+│   ├── ahb3
+│   │   └── test_peripheral.go
+│   ├── apb4
+│   │   └── test_peripheral.go
+│   ├── axi4
+│   │   └── test_peripheral.go
+│   ├── bb
+│   │   └── test_peripheral.go
+│   └── wb
+│       └── test_peripheral.go
+├── pu
+│   ├── ahb3
+│   │   └── test_peripheral.go
+│   ├── apb4
+│   │   └── test_peripheral.go
+│   ├── axi4
+│   │   └── test_peripheral.go
+│   ├── bb
+│   │   └── test_peripheral.go
+│   └── wb
+│       └── test_peripheral.go
+└── soc
     ├── ahb3
     │   └── test_peripheral.go
     ├── apb4
@@ -22,4 +44,4 @@ application
     └── wb
         └── test_peripheral.go
 
-12 directories, 10 files
+24 directories, 20 files

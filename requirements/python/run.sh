@@ -52,3 +52,13 @@ python3 library/core/apb4/peripheral_design.py
 python3 library/core/axi4/peripheral_design.py
 python3 library/core/bb/peripheral_design.py
 python3 library/core/wb/peripheral_design.py
+python3 library/pu/ahb3/peripheral_design.py
+python3 library/pu/apb4/peripheral_design.py
+python3 library/pu/axi4/peripheral_design.py
+python3 library/pu/bb/peripheral_design.py
+python3 library/pu/wb/peripheral_design.py
+python3 library/soc/ahb3/peripheral_design.py
+python3 library/soc/apb4/peripheral_design.py
+python3 library/soc/axi4/peripheral_design.py
+python3 library/soc/bb/peripheral_design.py
+python3 library/soc/wb/peripheral_design.py
