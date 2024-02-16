@@ -21,6 +21,17 @@ library
 │   │   └── peripheral_design.java
 │   └── wb
 │       └── peripheral_design.java
+├── mpsoc
+│   ├── ahb3
+│   │   └── peripheral_design.java
+│   ├── apb4
+│   │   └── peripheral_design.java
+│   ├── axi4
+│   │   └── peripheral_design.java
+│   ├── bb
+│   │   └── peripheral_design.java
+│   └── wb
+│       └── peripheral_design.java
 ├── pu
 │   ├── ahb3
 │   │   └── peripheral_design.java
@@ -44,4 +55,4 @@ library
     └── wb
         └── peripheral_design.java
 
-24 directories, 20 files
+30 directories, 25 files

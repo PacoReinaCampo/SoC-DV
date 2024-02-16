@@ -21,6 +21,17 @@ application
 │   │   └── peripheral_test.py
 │   └── wb
 │       └── peripheral_test.py
+├── mpsoc
+│   ├── ahb3
+│   │   └── peripheral_test.py
+│   ├── apb4
+│   │   └── peripheral_test.py
+│   ├── axi4
+│   │   └── peripheral_test.py
+│   ├── bb
+│   │   └── peripheral_test.py
+│   └── wb
+│       └── peripheral_test.py
 ├── pu
 │   ├── ahb3
 │   │   └── peripheral_test.py
@@ -44,4 +55,4 @@ application
     └── wb
         └── peripheral_test.py
 
-24 directories, 20 files
+30 directories, 25 files

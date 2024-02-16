@@ -21,6 +21,17 @@ application
 │   │   └── test_peripheral.go
 │   └── wb
 │       └── test_peripheral.go
+├── mpsoc
+│   ├── ahb3
+│   │   └── test_peripheral.go
+│   ├── apb4
+│   │   └── test_peripheral.go
+│   ├── axi4
+│   │   └── test_peripheral.go
+│   ├── bb
+│   │   └── test_peripheral.go
+│   └── wb
+│       └── test_peripheral.go
 ├── pu
 │   ├── ahb3
 │   │   └── test_peripheral.go
@@ -44,4 +55,4 @@ application
     └── wb
         └── test_peripheral.go
 
-24 directories, 20 files
+30 directories, 25 files
