@@ -1,24 +1,24 @@
-digraph structural_class_wb {
-  // wb bus node
-  wb_bus [label="{wb bus|+ ClockFrequency : int|+ DataWidth : int|+ SupportsBurst : bool|+ SupportsMultiMaster : bool|+ SupportsProtocols : bool}" shape=record];
+digraph structural_class_biu {
+  // biu bus node
+  biu_bus [label="{biu bus|+ ClockFrequency : int|+ DataWidth : int|+ SupportsBurst : bool|+ SupportsMultiMaster : bool|+ SupportsProtocols : bool}" shape=record];
   
-  // wb Master node
-  wbMaster [label="{wbMaster|+ ID : int|+ Priority : int}" shape=record];
+  // biu Master node
+  biuMaster [label="{biuMaster|+ ID : int|+ Priority : int}" shape=record];
   
-  // wb Slave node
-  wbSlave [label="{wbSlave|+ ID : int}" shape=record];
+  // biu Slave node
+  biuSlave [label="{biuSlave|+ ID : int}" shape=record];
   
-  // wb bus to wb Master relationship
-  wb_bus -> wbMaster [label="Controls"];
+  // biu bus to biu Master relationship
+  biu_bus -> biuMaster [label="Controls"];
   
-  // wb bus to wb Slave relationship
-  wb_bus -> wbSlave [label="Connected to"];
+  // biu bus to biu Slave relationship
+  biu_bus -> biuSlave [label="Connected to"];
   
-  // Additional attributes for wb Master
-  wbMaster -> wb_Arbitration [label="Uses"];
-  wb_Arbitration [label="{wb_Arbitration|+ ArbitrationType : string}" shape=record];
+  // Additional attributes for biu Master
+  biuMaster -> biu_Arbitration [label="Uses"];
+  biu_Arbitration [label="{biu_Arbitration|+ ArbitrationType : string}" shape=record];
   
-  // Additional attributes for wb Slave
-  wbSlave -> wb_Protocol [label="Uses"];
-  wb_Protocol [label="{wb_Protocol|+ ProtocolVersion : string}" shape=record];
+  // Additional attributes for biu Slave
+  biuSlave -> biu_Protocol [label="Uses"];
+  biu_Protocol [label="{biu_Protocol|+ ProtocolVersion : string}" shape=record];
 }

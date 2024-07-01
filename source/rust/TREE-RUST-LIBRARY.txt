@@ -73,43 +73,6 @@ library
 │           │   ├── mod.rs
 │           │   └── peripheral_design.rs
 │           └── lib.rs
-├── mpsoc
-│   ├── ahb3
-│   │   └── src
-│   │       ├── code
-│   │       │   ├── mod.rs
-│   │       │   └── peripheral_design.rs
-│   │       └── lib.rs
-│   ├── apb4
-│   │   └── src
-│   │       ├── code
-│   │       │   ├── mod.rs
-│   │       │   └── peripheral_design.rs
-│   │       └── lib.rs
-│   ├── axi4
-│   │   └── src
-│   │       ├── code
-│   │       │   ├── mod.rs
-│   │       │   └── peripheral_design.rs
-│   │       └── lib.rs
-│   ├── bb
-│   │   └── src
-│   │       ├── code
-│   │       │   ├── mod.rs
-│   │       │   └── peripheral_design.rs
-│   │       └── lib.rs
-│   ├── biu
-│   │   └── src
-│   │       ├── code
-│   │       │   ├── mod.rs
-│   │       │   └── peripheral_design.rs
-│   │       └── lib.rs
-│   └── wb
-│       └── src
-│           ├── code
-│           │   ├── mod.rs
-│           │   └── peripheral_design.rs
-│           └── lib.rs
 ├── pu
 │   ├── ahb3
 │   │   └── src
@@ -185,4 +148,4 @@ library
             │   └── peripheral_design.rs
             └── lib.rs
 
-95 directories, 90 files
+76 directories, 72 files

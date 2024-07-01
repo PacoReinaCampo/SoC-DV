@@ -25,19 +25,6 @@ library
 │   │   └── peripheral_design.go
 │   └── wb
 │       └── peripheral_design.go
-├── mpsoc
-│   ├── ahb3
-│   │   └── peripheral_design.go
-│   ├── apb4
-│   │   └── peripheral_design.go
-│   ├── axi4
-│   │   └── peripheral_design.go
-│   ├── bb
-│   │   └── peripheral_design.go
-│   ├── biu
-│   │   └── peripheral_design.go
-│   └── wb
-│       └── peripheral_design.go
 ├── pu
 │   ├── ahb3
 │   │   └── peripheral_design.go
@@ -65,4 +52,4 @@ library
     └── wb
         └── peripheral_design.go
 
-35 directories, 30 files
+28 directories, 24 files

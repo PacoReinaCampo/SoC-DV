@@ -37,25 +37,6 @@ application
 │   └── wb
 │       ├── peripheral_design.sv
 │       └── peripheral_testbench.sv
-├── mpsoc
-│   ├── ahb3
-│   │   ├── peripheral_design.sv
-│   │   └── peripheral_testbench.sv
-│   ├── apb4
-│   │   ├── peripheral_design.sv
-│   │   └── peripheral_testbench.sv
-│   ├── axi4
-│   │   ├── peripheral_design.sv
-│   │   └── peripheral_testbench.sv
-│   ├── bb
-│   │   ├── peripheral_design.sv
-│   │   └── peripheral_testbench.sv
-│   ├── biu
-│   │   ├── peripheral_design.sv
-│   │   └── peripheral_testbench.sv
-│   └── wb
-│       ├── peripheral_design.sv
-│       └── peripheral_testbench.sv
 ├── pu
 │   ├── ahb3
 │   │   ├── peripheral_design.sv
@@ -95,4 +76,4 @@ application
         ├── peripheral_design.sv
         └── peripheral_testbench.sv
 
-35 directories, 60 files
+28 directories, 48 files

@@ -37,25 +37,6 @@ library
 │   └── wb
 │       ├── peripheral_design.adb
 │       └── peripheral_design.ads
-├── mpsoc
-│   ├── ahb3
-│   │   ├── peripheral_design.adb
-│   │   └── peripheral_design.ads
-│   ├── apb4
-│   │   ├── peripheral_design.adb
-│   │   └── peripheral_design.ads
-│   ├── axi4
-│   │   ├── peripheral_design.adb
-│   │   └── peripheral_design.ads
-│   ├── bb
-│   │   ├── peripheral_design.adb
-│   │   └── peripheral_design.ads
-│   ├── biu
-│   │   ├── peripheral_design.adb
-│   │   └── peripheral_design.ads
-│   └── wb
-│       ├── peripheral_design.adb
-│       └── peripheral_design.ads
 ├── pu
 │   ├── ahb3
 │   │   ├── peripheral_design.adb
@@ -95,4 +76,4 @@ library
         ├── peripheral_design.adb
         └── peripheral_design.ads
 
-35 directories, 60 files
+28 directories, 48 files

@@ -24,12 +24,6 @@ members = [
 "library/soc/bb",
 "library/soc/biu",
 "library/soc/wb",
-"library/mpsoc/ahb3",
-"library/mpsoc/apb4",
-"library/mpsoc/axi4",
-"library/mpsoc/bb",
-"library/mpsoc/biu",
-"library/mpsoc/wb",
 
 "application/bfm/ahb3",
 "application/bfm/apb4",
@@ -54,11 +48,5 @@ members = [
 "application/soc/axi4",
 "application/soc/bb",
 "application/soc/biu",
-"application/soc/wb",
-"application/mpsoc/ahb3",
-"application/mpsoc/apb4",
-"application/mpsoc/axi4",
-"application/mpsoc/bb",
-"application/mpsoc/biu",
-"application/mpsoc/wb"
+"application/soc/wb"
 ]

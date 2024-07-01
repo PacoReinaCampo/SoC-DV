@@ -25,19 +25,6 @@ application
 │   │   └── main.cpp
 │   └── wb
 │       └── main.cpp
-├── mpsoc
-│   ├── ahb3
-│   │   └── main.cpp
-│   ├── apb4
-│   │   └── main.cpp
-│   ├── axi4
-│   │   └── main.cpp
-│   ├── bb
-│   │   └── main.cpp
-│   ├── biu
-│   │   └── main.cpp
-│   └── wb
-│       └── main.cpp
 ├── pu
 │   ├── ahb3
 │   │   └── main.cpp
@@ -65,4 +52,4 @@ application
     └── wb
         └── main.cpp
 
-35 directories, 30 files
+28 directories, 24 files

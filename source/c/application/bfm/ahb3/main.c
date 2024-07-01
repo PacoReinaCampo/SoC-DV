@@ -53,7 +53,7 @@ int main() {
   srand(time(NULL));
 
   int random_integer = rand();
-    
+
   double data_a_in = (double)random_integer / RAND_MAX;
   double data_b_in = (double)random_integer / RAND_MAX;
 

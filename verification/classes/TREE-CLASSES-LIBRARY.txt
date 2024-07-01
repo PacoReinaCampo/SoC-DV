@@ -133,79 +133,6 @@ library
 │       ├── peripheral_testbench.sv
 │       ├── peripheral_test.sv
 │       └── peripheral_transaction.sv
-├── mpsoc
-│   ├── ahb3
-│   │   ├── peripheral_agent.sv
-│   │   ├── peripheral_driver.sv
-│   │   ├── peripheral_environment.sv
-│   │   ├── peripheral_generator.sv
-│   │   ├── peripheral_interface.sv
-│   │   ├── peripheral_monitor.sv
-│   │   ├── peripheral_package.sv
-│   │   ├── peripheral_scoreboard.sv
-│   │   ├── peripheral_testbench.sv
-│   │   ├── peripheral_test.sv
-│   │   └── peripheral_transaction.sv
-│   ├── apb4
-│   │   ├── peripheral_agent.sv
-│   │   ├── peripheral_driver.sv
-│   │   ├── peripheral_environment.sv
-│   │   ├── peripheral_generator.sv
-│   │   ├── peripheral_interface.sv
-│   │   ├── peripheral_monitor.sv
-│   │   ├── peripheral_package.sv
-│   │   ├── peripheral_scoreboard.sv
-│   │   ├── peripheral_testbench.sv
-│   │   ├── peripheral_test.sv
-│   │   └── peripheral_transaction.sv
-│   ├── axi4
-│   │   ├── peripheral_agent.sv
-│   │   ├── peripheral_driver.sv
-│   │   ├── peripheral_environment.sv
-│   │   ├── peripheral_generator.sv
-│   │   ├── peripheral_interface.sv
-│   │   ├── peripheral_monitor.sv
-│   │   ├── peripheral_package.sv
-│   │   ├── peripheral_scoreboard.sv
-│   │   ├── peripheral_testbench.sv
-│   │   ├── peripheral_test.sv
-│   │   └── peripheral_transaction.sv
-│   ├── bb
-│   │   ├── peripheral_agent.sv
-│   │   ├── peripheral_driver.sv
-│   │   ├── peripheral_environment.sv
-│   │   ├── peripheral_generator.sv
-│   │   ├── peripheral_interface.sv
-│   │   ├── peripheral_monitor.sv
-│   │   ├── peripheral_package.sv
-│   │   ├── peripheral_scoreboard.sv
-│   │   ├── peripheral_testbench.sv
-│   │   ├── peripheral_test.sv
-│   │   └── peripheral_transaction.sv
-│   ├── biu
-│   │   ├── peripheral_agent.sv
-│   │   ├── peripheral_driver.sv
-│   │   ├── peripheral_environment.sv
-│   │   ├── peripheral_generator.sv
-│   │   ├── peripheral_interface.sv
-│   │   ├── peripheral_monitor.sv
-│   │   ├── peripheral_package.sv
-│   │   ├── peripheral_scoreboard.sv
-│   │   ├── peripheral_testbench.sv
-│   │   ├── peripheral_test.sv
-│   │   └── peripheral_transaction.sv
-│   └── wb
-│       ├── peripheral_agent.sv
-│       ├── peripheral_driver.sv
-│       ├── peripheral_environment.sv
-│       ├── peripheral_generator.sv
-│       ├── peripheral_interface.sv
-│       ├── peripheral_monitor.sv
-│       ├── peripheral_package.sv
-│       ├── peripheral_scoreboard.sv
-│       ├── peripheral_testbench.sv
-│       ├── peripheral_test.sv
-│       └── peripheral_transaction.sv
 ├── pu
 │   ├── ahb3
 │   │   ├── peripheral_agent.sv
@@ -353,4 +280,4 @@ library
         ├── peripheral_test.sv
         └── peripheral_transaction.sv
 
-35 directories, 318 files
+28 directories, 252 files

@@ -37,25 +37,6 @@ library
 │   └── wb
 │       ├── peripheral_design.c
 │       └── peripheral_design.h
-├── mpsoc
-│   ├── ahb3
-│   │   ├── peripheral_design.c
-│   │   └── peripheral_design.h
-│   ├── apb4
-│   │   ├── peripheral_design.c
-│   │   └── peripheral_design.h
-│   ├── axi4
-│   │   ├── peripheral_design.c
-│   │   └── peripheral_design.h
-│   ├── bb
-│   │   ├── peripheral_design.c
-│   │   └── peripheral_design.h
-│   ├── biu
-│   │   ├── peripheral_design.c
-│   │   └── peripheral_design.h
-│   └── wb
-│       ├── peripheral_design.c
-│       └── peripheral_design.h
 ├── pu
 │   ├── ahb3
 │   │   ├── peripheral_design.c
@@ -95,4 +76,4 @@ library
         ├── peripheral_design.c
         └── peripheral_design.h
 
-35 directories, 60 files
+28 directories, 48 files
