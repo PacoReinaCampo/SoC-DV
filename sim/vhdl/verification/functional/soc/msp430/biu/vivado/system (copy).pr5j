@@ -42,8 +42,8 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-../../../../../../../../soc/msp430/uvm/application/ahb3/peripheral_adder.sv
-../../../../../../../../soc/msp430/uvm/application/ahb3/peripheral_full_adder.sv
-../../../../../../../../soc/msp430/uvm/application/ahb3/peripheral_half_adder.sv
+../../../../../../../../soc/msp430/uvm/application/ahb4/peripheral_adder.sv
+../../../../../../../../soc/msp430/uvm/application/ahb4/peripheral_full_adder.sv
+../../../../../../../../soc/msp430/uvm/application/ahb4/peripheral_half_adder.sv
 
-../../../../../../../../soc/msp430/uvm/library/ahb3/peripheral_uvm_testbench.sv
+../../../../../../../../soc/msp430/uvm/library/ahb4/peripheral_uvm_testbench.sv
