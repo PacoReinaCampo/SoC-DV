@@ -42,10 +42,10 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../../../mpsoc/functional/msp430/osvvm/application/ahb4/peripheral_osvvm_design.vhd
-../../../../../../../../mpsoc/functional/msp430/osvvm/application/ahb4/peripheral_osvvm_design_pkg.vhd
+../../../../../../../../soc/functional/msp430/osvvm/application/ahb4/peripheral_osvvm_design.vhd
+../../../../../../../../soc/functional/msp430/osvvm/application/ahb4/peripheral_osvvm_design_pkg.vhd
 
-../../../../../../../../mpsoc/functional/msp430/osvvm/library/ahb4/peripheral_osvvm_model.vhd
-../../../../../../../../mpsoc/functional/msp430/osvvm/library/ahb4/peripheral_osvvm_model_pkg.vhd
+../../../../../../../../soc/functional/msp430/osvvm/library/ahb4/peripheral_osvvm_model.vhd
+../../../../../../../../soc/functional/msp430/osvvm/library/ahb4/peripheral_osvvm_model_pkg.vhd
 
-../../../../../../../../mpsoc/functional/msp430/osvvm/library/ahb4/peripheral_osvvm_testbench.vhd
+../../../../../../../../soc/functional/msp430/osvvm/library/ahb4/peripheral_osvvm_testbench.vhd

@@ -42,10 +42,10 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../../../mpsoc/formal/riscv/osvvm/application/wb/peripheral_osvvm_design.vhd
-../../../../../../../../mpsoc/formal/riscv/osvvm/application/wb/peripheral_osvvm_design_pkg.vhd
+../../../../../../../../soc/formal/riscv/osvvm/application/wb/peripheral_osvvm_design.vhd
+../../../../../../../../soc/formal/riscv/osvvm/application/wb/peripheral_osvvm_design_pkg.vhd
 
-../../../../../../../../mpsoc/formal/riscv/osvvm/library/wb/peripheral_osvvm_model.vhd
-../../../../../../../../mpsoc/formal/riscv/osvvm/library/wb/peripheral_osvvm_model_pkg.vhd
+../../../../../../../../soc/formal/riscv/osvvm/library/wb/peripheral_osvvm_model.vhd
+../../../../../../../../soc/formal/riscv/osvvm/library/wb/peripheral_osvvm_model_pkg.vhd
 
-../../../../../../../../mpsoc/formal/riscv/osvvm/library/wb/peripheral_osvvm_testbench.vhd
+../../../../../../../../soc/formal/riscv/osvvm/library/wb/peripheral_osvvm_testbench.vhd
