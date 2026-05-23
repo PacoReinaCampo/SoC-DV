@@ -7,3 +7,9 @@
 [submodule "intelligence/soc-ntm"]
 	path = intelligence/soc-ntm
 	url = https://github.com/PacoReinaCampo/SoC-NTM.git
+[submodule "intelligence/soc-dnc"]
+	path = intelligence/soc-dnc
+	url = https://github.com/PacoReinaCampo/SoC-DNC.git
+[submodule "intelligence/soc-ann"]
+	path = intelligence/soc-ann
+	url = https://github.com/PacoReinaCampo/SoC-ANN.git
